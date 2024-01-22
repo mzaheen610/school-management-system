@@ -79,24 +79,74 @@
     </header>
 
     <section>
-        <h2>Welcome to our School Management System</h2>
-        <p>Efficiently manage students, teachers, classes, and more.</p>
-        <a href="#" class="cta-button">Get Started</a>
-    </section>
-
-    <section class="features">
-        <div class="feature">
-            <h3>Student Management</h3>
-            <p>Manage student information, attendance, and performance.</p>
-        </div>
-        <div class="feature">
-            <h3>Teacher Management</h3>
-            <p>Track teacher details, assignments, and schedules.</p>
-        </div>
-        <div class="feature">
-            <h3>Class Schedules</h3>
-            <p>Efficiently organize and manage class schedules.</p>
-        </div>
+        {% if request.user.is_authenticated %}
+            <p>You are logged in as: {{ request.user.email }}</p>
+            {% if request.user.is_parent %}
+                <p>You are a parent.</p>
+                <!-- Display features for parents -->
+                <div class="features">
+                    <div class="feature">
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </div>
+            {% elif request.user.is_staff %}
+                <p>You are a staff member.</p>
+                <!-- Display features for staff -->
+                <div class="features">
+                    <div class="feature">
+                        <h3>Student Enrollment</h3>
+                        <p>Enroll new students into the system.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Attendance Management</h3>
+                        <p>Mark attendance for students and staff.</p>
+                    </div>
+                </div>
+            {% elif request.user.is_admin %}
+                <p>You are an admin.</p>
+                <!-- Display features for admins -->
+                <div class="features">
+                    <div class="feature">
+                        <h3>Student and Staff Management</h3>
+                        <p>Manage information about students and staff.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Class Schedules</h3>
+                        <p>Efficiently organize and manage class schedules.</p>
+                    </div>
+                </div>
+            {% endif %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login_form' %}">Login</a>
+            <div class="features">
+                <div class="feature">
+                    <h3>View Student Information</h3>
+                    <p>Access information about your child's performance and attendance.</p>
+                </div>
+            </div>
+            <div class="features">
+                <div class="feature">
+                    <h3>Student Enrollment</h3>
+                    <p>Enroll new students into the system.</p>
+                </div>
+                <div class="feature">
+                    <h3>Attendance Management</h3>
+                    <p>Mark attendance for students and staff.</p>
+                </div>
+            </div>
+            <div class="features">
+                <div class="feature">
+                    <h3>Student and Staff Management</h3>
+                    <p>Manage information about students and staff.</p>
+                </div>
+                <div class="feature">
+                    <h3>Class Schedules</h3>
+                    <p>Efficiently organize and manage class schedules.</p>
+                </div>
+            </div>
+        {% endif %}
     </section>
 
     <footer>
@@ -104,12 +154,3 @@
     </footer>
 </body>
 </html>
-
-<!-- {% if request.user.is_authenticated %}
-  <p>{{ request.user.username }}</p>
-  <a href="{% url 'logout' %}">Logout</a>
-{% else %}
-  <a href="{% url 'login' %}">Login</a>
-{% endif %}
-
-<h1>Welcome!</h1> -->

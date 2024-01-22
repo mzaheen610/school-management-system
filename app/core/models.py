@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         )
         user.is_superuser = True
         user.save(using=self._db)
-        
+
         return user
 
 
@@ -53,3 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["is_staff", "is_admin", "is_parent"]
 
+
+# class Student(models.Model):
+#     """Model for the student."""
+
+#     name = models.CharField()
