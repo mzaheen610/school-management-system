@@ -3,6 +3,7 @@ Models for the school management system.
 [ user, student, staff, attendance ]
 """
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -54,7 +55,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["is_staff", "is_admin", "is_parent"]
 
 
-# class Student(models.Model):
-#     """Model for the student."""
+class Student(models.Model):
+    """Model for the student."""
 
-#     name = models.CharField()
+    name = models.CharField(max_length=100, blank=False)
+    student_id = models.AutoField(primary_key = True)
+    date_of_birth = models.DateField()
+    join_date = models.DateField(auto_now_add=True)
+    current_class = models.CharField(max_length=10)
+    email = models.EmailField(unique=True, blank=False)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        """Overriding default save to create parent user."""
+        parent_email = self.email
+        password = self.name
+        user_model = get_user_model()
+        user, created = user_model.objects.get_or_create(email=parent_email, defaults={'password': password, 'is_parent': True})
+
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+
+    def __str__(self):
+        return f"{self.name} - ID{self.student_id}"

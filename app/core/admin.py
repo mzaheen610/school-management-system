@@ -11,6 +11,7 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     """Admin page for the users."""
     ordering = ['id']
+    list_filter = ['is_parent', 'is_staff', 'is_admin']
     list_display = ['email', 'is_admin', 'is_parent', 'is_staff', 'is_superuser']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -43,4 +44,11 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+class StudentAdmin(admin.ModelAdmin):
+    """Admin for the students."""
+    list_display = ['name', 'student_id', 'current_class', 'join_date']
+    ordering = ['current_class']
+
+
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Student, StudentAdmin)
