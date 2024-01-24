@@ -59,7 +59,7 @@ class Student(models.Model):
     """Model for the student."""
 
     name = models.CharField(max_length=100, blank=False)
-    student_id = models.AutoField(primary_key = True)
+    student_id = models.CharField(max_length=10, primary_key=True, blank=True)
     date_of_birth = models.DateField()
     join_date = models.DateField(auto_now_add=True)
     current_class = models.CharField(max_length=10)
@@ -70,11 +70,54 @@ class Student(models.Model):
     def save(self, *args, **kwargs):
         """Overriding default save method to auto create user for student's parent."""
         parent_email = self.email
-        password = self.name
+        password = '12345678'
         user_model = get_user_model()
         user, created = user_model.objects.get_or_create(email=parent_email, defaults={'password': password, 'is_parent': True})
+
+        if not self.student_id:
+            """Generate a unique student ID, example 'S001', S002"""
+            last_student = Student.objects.order_by('-student_id').first()
+            if last_student:
+                last_id = int(last_student.student_id[1:])
+                self.student_id = 'S{:03d}'.format(last_id + 1)
+            else:
+                self.student_id = 'S001'
 
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def __str__(self):
         return f"{self.name} - ID{self.student_id}"
+
+
+class Staff(models.Model):
+    """Model for the school staff."""
+    name = models.CharField(max_length=100, blank=False)
+    staff_id = models.CharField(max_length=10, primary_key = True, blank=True)
+    date_of_birth = models.DateField()
+    join_date = models.DateField(auto_now_add=True)
+    department_id = models.IntegerField(blank=True, null=True)
+    email = models.EmailField(unique=True, blank=False)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        """Overriding default save method for staff."""
+
+        staff_email = self.email
+        password = self.name
+        user_model = get_user_model()
+        user, created = user_model.objects.get_or_create(email=staff_email, defaults={'password': password, 'is_school_staff': True})
+
+        if not self.staff_id:
+            # Generate a unique staff ID, for example, 'T001', 'T002', etc.
+            last_staff = Staff.objects.order_by('-staff_id').first()
+            if last_staff:
+                last_id = int(last_staff.staff_id[1:])
+                self.staff_id = 'T{:03d}'.format(last_id + 1)
+            else:
+                self.staff_id = 'T001'
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} - ID{self.staff_id}"

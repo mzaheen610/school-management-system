@@ -52,3 +52,4 @@ class StudentAdmin(admin.ModelAdmin):
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Student, StudentAdmin)
+admin.site.register(models.Staff)
