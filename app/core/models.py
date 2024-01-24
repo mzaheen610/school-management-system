@@ -46,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255, unique=False)
     is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    is_school_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -68,7 +68,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        """Overriding default save to create parent user."""
+        """Overriding default save method to auto create user for student's parent."""
         parent_email = self.email
         password = self.name
         user_model = get_user_model()

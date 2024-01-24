@@ -86,33 +86,26 @@
     </header>
 
     <section>
+
         {% if request.user.is_authenticated %}
             <p>You are logged in as: {{ request.user.email }}</p>
-            {% if request.user.is_parent %}
-                <p>You are a parent.</p>
-                <!-- Display features for parents -->
-                <div class="features">
-                    <div class="feature">
-                        <h3>View Student Information</h3>
-                        <p>Access information about your child's performance and attendance.</p>
-                    </div>
+            {% if request.user.is_staff %}
+            <p>You are an admin.</p>
+            <!-- Display features for the admins -->
+            <div class="features">
+                <div class="feature">
+                    <h3>Student Enrollment</h3>
+                    <p>Enroll new students into the system.</p>
                 </div>
-            {% elif request.user.is_staff %}
+                <div class="feature">
+                    <h3>Attendance Management</h3>
+                    <p>Mark attendance for students and staff.</p>
+                </div>
+            </div>
+
+            {% elif request.user.is_school_staff %}
                 <p>You are a staff member.</p>
-                <!-- Display features for staff -->
-                <div class="features">
-                    <div class="feature">
-                        <h3>Student Enrollment</h3>
-                        <p>Enroll new students into the system.</p>
-                    </div>
-                    <div class="feature">
-                        <h3>Attendance Management</h3>
-                        <p>Mark attendance for students and staff.</p>
-                    </div>
-                </div>
-            {% elif request.user.is_admin %}
-                <p>You are an admin.</p>
-                <!-- Display features for admins -->
+                <!-- Display features for a school staff member -->
                 <div class="features">
                     <div class="feature">
                         <h3>Student and Staff Management</h3>
@@ -123,6 +116,16 @@
                         <p>Efficiently organize and manage class schedules.</p>
                     </div>
                 </div>
+            {% elif request.user.is_parent %}
+                <p>You are a parent.</p>
+                <!-- Display features for parents -->
+                <div class="features">
+                    <div class="feature">
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </div>
+
             {% endif %}
             <a class="cta-button" href="{% url 'logout' %}">Logout</a>
         {% else %}

@@ -11,15 +11,15 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     """Admin page for the users."""
     ordering = ['id']
-    list_filter = ['is_parent', 'is_staff', 'is_admin']
-    list_display = ['email', 'is_admin', 'is_parent', 'is_staff', 'is_superuser']
+    list_filter = ['is_parent', 'is_staff', 'is_school_staff']
+    list_display = ['email', 'is_school_staff', 'is_parent', 'is_staff', 'is_superuser']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Permissions'),
          {
             'fields': (
                 'is_staff',
-                'is_admin',
+                'is_school_staff',
                 'is_parent',
                 'is_superuser'
                 )
@@ -36,7 +36,7 @@ class UserAdmin(BaseUserAdmin):
                 'password1',
                 'password2',
                 'is_staff',
-                'is_admin',
+                'is_school_staff',
                 'is_parent',
                 'is_superuser'
 
