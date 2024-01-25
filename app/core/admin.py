@@ -48,6 +48,18 @@ class StudentAdmin(admin.ModelAdmin):
     """Admin for the students."""
     list_display = ['name', 'student_id', 'current_class', 'join_date']
     ordering = ['current_class']
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': (
+                'name',
+                'current_class',
+                'date_of_birth',
+                'email',
+
+            )
+        }),
+    )
 
 
 admin.site.register(models.User, UserAdmin)

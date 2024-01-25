@@ -70,9 +70,14 @@ class Student(models.Model):
     def save(self, *args, **kwargs):
         """Overriding default save method to auto create user for student's parent."""
         parent_email = self.email
-        password = '12345678'
+        password = self.name
         user_model = get_user_model()
-        user, created = user_model.objects.get_or_create(email=parent_email, defaults={'password': password, 'is_parent': True})
+        user, created = user_model.objects.get_or_create(email=parent_email, defaults={'is_parent': True})
+
+        user.set_password(password)
+        user.save()
+        if not self.user:
+            self.user = user
 
         if not self.student_id:
             """Generate a unique student ID, example 'S001', S002"""
@@ -82,11 +87,10 @@ class Student(models.Model):
                 self.student_id = 'S{:03d}'.format(last_id + 1)
             else:
                 self.student_id = 'S001'
-
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def __str__(self):
-        return f"{self.name} - ID{self.student_id}"
+        return f"{self.name} - ID {self.student_id}"
 
 
 class Staff(models.Model):
@@ -106,7 +110,10 @@ class Staff(models.Model):
         staff_email = self.email
         password = self.name
         user_model = get_user_model()
-        user, created = user_model.objects.get_or_create(email=staff_email, defaults={'password': password, 'is_school_staff': True})
+        user, created = user_model.objects.get_or_create(email=staff_email, defaults={'is_school_staff': True})
+
+        user.set_password(password)
+        user.save()
 
         if not self.staff_id:
             # Generate a unique staff ID, for example, 'T001', 'T002', etc.
@@ -120,4 +127,4 @@ class Staff(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name} - ID{self.staff_id}"
+        return f"{self.name} - ID {self.staff_id}"

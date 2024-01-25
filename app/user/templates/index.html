@@ -91,6 +91,7 @@
             <p>You are logged in as: {{ request.user.email }}</p>
             {% if request.user.is_staff %}
             <p>You are an admin.</p>
+            <a class="cta-button" href="{% url 'admin:index' %}">Admin Page</a>
             <!-- Display features for the admins -->
             <div class="features">
                 <div class="feature">
