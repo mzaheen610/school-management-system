@@ -16,7 +16,6 @@ def index(request):
 def login_page_view(request):
     """View for the login page."""
     messages_data = messages.get_messages(request)
-    print(messages_data)
     return render(request, 'login.html', {'form': LoginForm(), 'messages': messages_data})
 
 
