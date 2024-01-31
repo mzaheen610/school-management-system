@@ -15,6 +15,3 @@ class StudentAPIView(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        """Retrieve student profile for authenticated user """
