@@ -25,5 +25,5 @@ urlpatterns = [
          name='api-docs',
          ),
     path('', include('user.urls')),
-    path('api/student/', include('student.urls')),
+    path('api/', include('student.urls')),
 ]

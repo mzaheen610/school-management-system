@@ -1,28 +1,44 @@
 """
 Views for the student API.
 """
-
-from rest_framework import viewsets
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets, mixins
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .serializers import StudentSerializer
-from .permissions import IsAdmin, IsSchoolStaff, IsParent
 from core.models import Student
 
-class StudentAPIView(viewsets.ModelViewSet):
+
+class StudentAPIView(viewsets.GenericViewSet,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     mixins.CreateModelMixin):
     """Viewset for viewing and managing student profiles."""
 
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAdmin]
+    permission_classes= [IsAuthenticated]
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [IsAdmin() or IsSchoolStaff()]
-        elif self.action == 'retrieve':
-            print("Here")
-            return [IsAdmin() or IsSchoolStaff() or IsParent()]
-        elif self.action in ['update', 'partial_update']:
-            return [IsAdmin() or IsSchoolStaff()]
-        else:
-            return super().get_permissions()
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_parent:
+            return HttpResponse("You are not authorized to view this.")
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        if self.request.user.is_parent or self.request.user.is_school_staff:
+            return HttpResponse("You are not authorized to view this.")
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_parent or self.request.user.is_school_staff:
+            return HttpResponse("You are not authorized to view this.")
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_parent or self.request.user.is_school_staff:
+            return HttpResponse("You are not authorized to view this.")
+        return super().destroy(request, *args, **kwargs)
