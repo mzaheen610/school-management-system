@@ -1,12 +1,13 @@
 """
-Views for the student API.
+Views for the student API and student management.
 """
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import StudentSerializer
+from . import forms
 from core.models import Student
 
 
@@ -42,3 +43,13 @@ class StudentAPIView(viewsets.GenericViewSet,
         if self.request.user.is_parent or self.request.user.is_school_staff:
             return HttpResponse("You are not authorized to view this.")
         return super().destroy(request, *args, **kwargs)
+
+
+def StudentEnrollmentPageView(request):
+    """View for student enrollment page."""
+    return render(request, 'enroll_student.html', {'form': forms.StudentEnrollmentForm()})
+
+
+# def StudentEnrollmentView(request):
+#     """View for student enrollment."""
+#     if request.method == 'POST':

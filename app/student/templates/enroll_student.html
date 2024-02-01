@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrollment</title>
+</head>
+<body>
+
+  <h2>Student Enrollment Form</h2>
+
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div>
+      <label for="{{ form.name.id_for_label }}">Name:</label>
+      {{ form.name }}
+      {{ form.name.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth:</label>
+      {{ form.date_of_birth }}
+      {{ form.date_of_birth.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.current_class.id_for_label }}">Current Class:</label>
+      {{ form.current_class }}
+      {{ form.current_class.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.email.id_for_label }}">Email:</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <button type="submit">Enroll</button>
+  </form>
+
+</body>
+</html>

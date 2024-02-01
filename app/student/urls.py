@@ -12,5 +12,6 @@ router.register(r'student', views.StudentAPIView)
 app_name = 'student'
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('student/enroll', views.StudentEnrollmentPageView, name = 'student_enrollment_page'),
 ]
