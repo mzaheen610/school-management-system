@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         """Creates and saves a superuser."""
         extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_admin', True)
+        extra_fields.setdefault('is_school_staff', True)
         extra_fields.setdefault('is_parent', True)
         user = self.create_user(
             email,
@@ -50,9 +50,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_parent = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+
     objects = UserManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ["is_staff", "is_admin", "is_parent"]
+    REQUIRED_FIELDS = ["is_staff", "is_school_staff", "is_parent"]
 
 
 class Student(models.Model):
