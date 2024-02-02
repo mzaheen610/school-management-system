@@ -1,6 +1,7 @@
 """
 Views for the student API.
 """
+from re import X
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, mixins
@@ -32,7 +33,7 @@ class StudentAPIView(viewsets.GenericViewSet,
         if self.request.user.is_parent or self.request.user.is_school_staff:
             return HttpResponse("You are not authorized to view this.")
         return super().create(request, *args, **kwargs)
-
+    
     def update(self, request, *args, **kwargs):
         if self.request.user.is_parent or self.request.user.is_school_staff:
             return HttpResponse("You are not authorized to view this.")
