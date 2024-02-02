@@ -53,3 +53,7 @@ def StudentEnrollmentPageView(request):
 # def StudentEnrollmentView(request):
 #     """View for student enrollment."""
 #     if request.method == 'POST':
+
+def StudentProfileView(request):
+    """View for the student profile page."""
+    return render(request, 'student_profile.html')

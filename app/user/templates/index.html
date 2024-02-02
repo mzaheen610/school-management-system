@@ -68,6 +68,10 @@
             transform: scale(1.05);
         }
 
+        .feature h3 {
+            color: #fff; /* White text color for h3 inside .feature */
+        }
+        
         footer {
             background-color: #343a40; /* Dark background color */
             color: #fff; /* White text color */
@@ -137,10 +141,13 @@
                     <h3>View Student Information</h3>
                     <p>Access information about your child's performance and attendance.</p>
                 </div>
-                <div class="feature">
-                    <h3>Student Enrollment</h3>
-                    <p>Enroll new students into the system.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_enrollment_page' %}'">
+                    <div>
+                        <h3>Student Enrollment</h3>
+                        <p>Enroll new students into the system.</p>
+                    </div>
+                </button>
+
                 <div class="feature">
                     <h3>Attendance Management</h3>
                     <p>Mark attendance for students and staff.</p>
