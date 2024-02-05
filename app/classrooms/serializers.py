@@ -1,8 +1,6 @@
-from pyexpat import model
-from unittest.util import _MAX_LENGTH
-from attr import fields
 from rest_framework import serializers
 from classrooms.models import ClassSchedules, Teachers, Class, Subject
+from classrooms.models import WeekDayEnum, StandardEnum
 
 class TeacherSerializer(serializers.ModelSerializer):
     """Serilizer for teacher model"""
@@ -41,6 +39,13 @@ class ClassSerializer(serializers.ModelSerializer):
         model = Class
         fields = ["class_id", "class_teacher", "standard", "capacity", "room_no"]
 
+    def validate_standard(self, value):
+        valid_data = [choice[0] for choice in StandardEnum.CHOICES]
+
+        if value not in valid_data:
+            raise serializers.ValidationError("Invalid standard.")
+        else:
+            return value
 
 class  ClassCreateSerializer(serializers.ModelSerializer):
     """Serializer for the class model."""
@@ -65,6 +70,14 @@ class ClassSchedulesCreateSerializer(serializers.ModelSerializer):
         model = ClassSchedules
         fields = ["classroom", "day_of_week", "slot", "subject_id"]
 
+    def validate_day_of_week(self,value):
+        valid_names = [choice[0] for choice in WeekDayEnum.CHOICES]
+
+        if value not in valid_names:
+            raise serializers.ValidationError("Invalid day name.")
+        else:
+            return value
+
 
 class CreateDaySchedule(serializers.Serializer):
 
@@ -76,5 +89,14 @@ class CreateDaySchedule(serializers.Serializer):
     slot4 = serializers.IntegerField(required=True)
     slot5 = serializers.IntegerField(required=True)
     slot6 = serializers.IntegerField(required=True)
+
+    def validate_day(self,value):
+        valid_names = [choice[0] for choice in WeekDayEnum.CHOICES]
+
+        if value not in valid_names:
+            raise serializers.ValidationError("Invalid day name.")
+        else:
+            return value
+
 
 

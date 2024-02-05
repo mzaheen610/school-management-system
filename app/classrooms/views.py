@@ -143,7 +143,7 @@ class CreateClassView(generics.CreateAPIView):
             return HttpResponse("Not authorized")
         
     def perform_create(self, serializer):
-        last_Class_id = Class.objects.all().order_by('-Class_id')[0].class_id+1 if self.queryset.count() > 0 else 1
+        last_Class_id = Class.objects.all().order_by('-class_id')[0].class_id+1 if self.queryset.count() > 0 else 1
         class_code = str(last_Class_id).zfill(3)
         serializer.save(class_id=class_code)
 
