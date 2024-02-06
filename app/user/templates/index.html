@@ -71,7 +71,7 @@
         .feature h3 {
             color: #fff; /* White text color for h3 inside .feature */
         }
-        
+
         footer {
             background-color: #343a40; /* Dark background color */
             color: #fff; /* White text color */
@@ -98,10 +98,12 @@
             <a class="cta-button" href="{% url 'admin:index' %}">Admin Page</a>
             <!-- Display features for the admins -->
             <div class="features">
-                <div class="feature">
-                    <h3>Student Enrollment</h3>
-                    <p>Enroll new students into the system.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_enrollment_page' %}'">
+                    <div>
+                        <h3>Student Enrollment</h3>
+                        <p>Enroll new students into the system.</p>
+                    </div>
+                </button>
                 <div class="feature">
                     <h3>Attendance Management</h3>
                     <p>Mark attendance for students and staff.</p>
@@ -137,10 +139,12 @@
             <a class="cta-button" href="{% url 'login_form' %}">Login</a>
             <!-- Features for non-authenticated users -->
             <div class="features">
-                <div class="feature">
-                    <h3>View Student Information</h3>
-                    <p>Access information about your child's performance and attendance.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_profile' %}'">
+                    <div>
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </button>
                 <button class="feature" onclick="window.location.href='{% url 'student:student_enrollment_page' %}'">
                     <div>
                         <h3>Student Enrollment</h3>
