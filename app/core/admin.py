@@ -6,6 +6,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from core import models
+import classrooms
+import attendance
 
 
 class UserAdmin(BaseUserAdmin):
@@ -62,6 +64,15 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
 
+class StudentAttendanceAdmin(admin.ModelAdmin):
+    """Admin for student attendance model."""
+    list_display = ['student', 'date', 'status', 'comment']
+    ordering = ['date']
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Student, StudentAdmin)
 admin.site.register(models.Staff)
+admin.site.register(classrooms.models.Class)
+admin.site.register(attendance.models.StudentAttendance, StudentAttendanceAdmin)
+admin.site.register(attendance.models.StaffAttendance)

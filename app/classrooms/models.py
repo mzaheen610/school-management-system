@@ -1,5 +1,4 @@
 from django.db import models
-from core.models import Staff
 
 
 class Subject(models.Model):
@@ -9,7 +8,7 @@ class Subject(models.Model):
 
 class Teachers(models.Model):
     teacher_id = models.IntegerField(primary_key=True)
-    staff_id = models.OneToOneField(Staff, on_delete=models.CASCADE)
+    staff_id = models.OneToOneField('core.Staff', on_delete=models.CASCADE)
     subject_id = models.ForeignKey(Subject,  null=False, blank=False, on_delete=models.CASCADE)
 
 class ClassSchedules(models.Model):
@@ -25,3 +24,6 @@ class Class(models.Model):
     standard = models.CharField(max_length=255)
     capacity = models.IntegerField()
     room_no = models.IntegerField()
+
+    def __str__(self):
+        return self.standard
