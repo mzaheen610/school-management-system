@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mark Attendance</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -33,55 +34,44 @@
             margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-top: 10px;
-            color: #333;
+        .form-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-inline .form-group {
+            margin-bottom: 0;
+        }
+
+        .student-list-table th {
             font-weight: bold;
-            text-align: left;
+            vertical-align: middle;
+            background-color: #f8f9fa;
+            border-top: none;
         }
 
-        input[type="text"] {
-            width: calc(100% - 16px);
-            padding: 8px;
-            margin-top: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .student-list-table td {
+            vertical-align: middle;
+            border-top: none;
         }
 
-        button[type="submit"] {
-            background-color: #4caf50;
+        .student-list-table input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .btn-submit {
+            background-color: #28a745;
             color: #fff;
-            padding: 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 20px;
-            width: 100%;
+            padding: 10px 20px;
             transition: background-color 0.3s ease;
         }
 
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        #student-list {
-            margin-top: 20px;
-        }
-
-        .student-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .student-item input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        .student-name {
-            font-weight: bold;
+        .btn-submit:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -89,23 +79,54 @@
     <h2>Mark Attendance</h2>
 
     <!-- Form to input class ID -->
-    <form id="class-form">
-        <label for="class-id">Enter Class ID:</label>
-        <input type="text" id="class-id" name="class-id">
-        <button type="submit">Get Students</button>
+    <form id="class-form" class="form-inline mb-3">
+        <div class="form-group mr-3">
+            <label for="class-id" class="mr-2">Enter Class ID:</label>
+            <input type="text" id="class-id" name="class-id" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Get Students</button>
     </form>
 
     <!-- Student list will be displayed here -->
-    <div id="student-list"></div>
+    <div class="table-responsive">
+        <table class="table student-list-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th class="text-right">Mark Absent</th>
+                </tr>
+            </thead>
+            <tbody id="student-list"></tbody>
+        </table>
+    </div>
 
     <!-- Form to submit attendance data -->
     <form id="attendance-form">
+        {% csrf_token %}
         <input type="hidden" id="class-id-hidden" name="class-id">
         <input type="hidden" id="absent-students-hidden" name="absent-students">
-        <button type="submit">Submit Attendance</button>
+        <button type="submit" class="btn btn-submit">Submit Attendance</button>
     </form>
-
+    
     <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if the cookie contains the specified name
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        // Extract and return the cookie value
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
         document.getElementById('class-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
 
@@ -161,11 +182,33 @@
                 absentStudents.push(checkbox.value);
             });
 
-            // Set absent students in the hidden input field
-            document.getElementById('absent-students-hidden').value = JSON.stringify(absentStudents);
+            var classId = document.getElementById('class-id-hidden').value;
 
-            // Submit the form
-            this.submit();
+            var formData = new FormData();
+            formData.append('class-id', classId);
+            formData.append('absent-students', JSON.stringify(absentStudents));
+
+            var csrftoken = getCookie('csrftoken');
+            fetch('/api/student-attendance/', {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                credentials: "include",
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to submit attendance data');
+            })
+            .then(data =>{
+                console.log(data);
+                alert('Attendance marked successfully');
+            })
+            .catch(error =>{
+                console.error('Error:', error);
+                alert('Failed to mark attendance');
+            });
         });
     </script>
 </body>

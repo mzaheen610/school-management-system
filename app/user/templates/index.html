@@ -104,10 +104,18 @@
                         <p>Enroll new students into the system.</p>
                     </div>
                 </button>
-                <div class="feature">
-                    <h3>Attendance Management</h3>
-                    <p>Mark attendance for students and staff.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_profile' %}'">
+                    <div>
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'attendance:mark-attendance' %}'">
+                    <div>
+                        <h3>Attendance Management</h3>
+                        <p>Mark attendance for students and staff.</p>
+                    </div>
+                </button>
             </div>
 
             {% elif request.user.is_school_staff %}
@@ -151,11 +159,12 @@
                         <p>Enroll new students into the system.</p>
                     </div>
                 </button>
-
-                <div class="feature">
-                    <h3>Attendance Management</h3>
-                    <p>Mark attendance for students and staff.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'attendance:mark-attendance' %}'">
+                    <div class="feature">
+                        <h3>Attendance Management</h3>
+                        <p>Mark attendance for students and staff.</p>
+                    </div>
+                </button>
                 <div class="feature">
                     <h3>Student and Staff Management</h3>
                     <p>Manage information about students and staff.</p>

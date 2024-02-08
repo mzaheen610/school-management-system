@@ -10,6 +10,8 @@ from user.forms import LoginForm
 
 def index(request):
     """View for the home page."""
+    if not request.user.is_authenticated:
+        return redirect('login_form')
     return render(request, 'index.html')
 
 

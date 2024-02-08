@@ -70,9 +70,15 @@ class StudentAttendanceAdmin(admin.ModelAdmin):
     ordering = ['date']
 
 
+class ClassAdmin(admin.ModelAdmin):
+    """Admin for class model."""
+    list_display = ['standard', 'class_id']
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Student, StudentAdmin)
 admin.site.register(models.Staff)
-admin.site.register(classrooms.models.Class)
+admin.site.register(classrooms.models.Class, ClassAdmin)
 admin.site.register(attendance.models.StudentAttendance, StudentAttendanceAdmin)
 admin.site.register(attendance.models.StaffAttendance)
+
