@@ -8,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from core import models
 import classrooms
 import attendance
+import classrooms
+import attendance
 
 
 class UserAdmin(BaseUserAdmin):
