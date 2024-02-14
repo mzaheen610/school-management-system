@@ -1,3 +1,7 @@
+"""
+Views for the messaging app.
+"""
 from django.shortcuts import render
 
-# Create your views here.
+def messagingHomePage(request):
+    return render(request, 'lobby.html')
