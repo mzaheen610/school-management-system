@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin )
 
+
 class UserManager(BaseUserManager):
     """Manager for users. """
 
@@ -62,10 +63,11 @@ class Student(models.Model):
     student_id = models.CharField(max_length=10, primary_key=True, blank=True)
     date_of_birth = models.DateField()
     join_date = models.DateField(auto_now_add=True)
-    current_class = models.CharField(max_length=10)
+    # current_class = models.CharField(max_length=10)
     email = models.EmailField(unique=True, blank=False)
-
+    current_class = models.ForeignKey('classrooms.Class', on_delete=models.SET_NULL, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+
 
     def save(self, *args, **kwargs):
         """Overriding default save method to auto create user for student's parent."""
@@ -101,12 +103,12 @@ class Staff(models.Model):
     join_date = models.DateField(auto_now_add=True)
     department_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(unique=True, blank=False)
-
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    current_class = models.ForeignKey('classrooms.Class', on_delete=models.SET_NULL, blank=True, null=True)
+
 
     def save(self, *args, **kwargs):
         """Overriding default save method for staff."""
-
         staff_email = self.email
         password = self.name
         user_model = get_user_model()

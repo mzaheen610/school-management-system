@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #attendance-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-inline .form-group {
+            margin-bottom: 0;
+        }
+
+        .student-list-table th {
+            font-weight: bold;
+            vertical-align: middle;
+            background-color: #f8f9fa;
+            border-top: none;
+        }
+
+        .student-list-table td {
+            vertical-align: middle;
+            border-top: none;
+        }
+
+        .student-list-table input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .btn-submit {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h2>Mark Attendance</h2>
+
+    <!-- Form to input class ID -->
+    <form id="class-form" class="form-inline mb-3">
+        <div class="form-group mr-3">
+            <label for="class-id" class="mr-2">Enter Class ID:</label>
+            <input type="text" id="class-id" name="class-id" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Get Students</button>
+    </form>
+
+    <!-- Student list will be displayed here -->
+    <div class="table-responsive">
+        <table class="table student-list-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th class="text-right">Mark Absent</th>
+                </tr>
+            </thead>
+            <tbody id="student-list"></tbody>
+        </table>
+    </div>
+
+    <!-- Form to submit attendance data -->
+    <form id="attendance-form">
+        {% csrf_token %}
+        <input type="hidden" id="class-id-hidden" name="class-id">
+        <input type="hidden" id="absent-students-hidden" name="absent-students">
+        <button type="submit" class="btn btn-submit">Submit Attendance</button>
+    </form>
+
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if the cookie contains the specified name
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        // Extract and return the cookie value
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+        document.getElementById('class-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get class ID entered by the user
+            var classId = document.getElementById('class-id').value;
+
+            // Fetch student list from API endpoint
+            fetch('/api/student/class/?class_id=' + classId)
+                .then(response => response.json())
+                .then(data => {
+                    // Display student list
+                    var studentListDiv = document.getElementById('student-list');
+                    studentListDiv.innerHTML = ''; // Clear previous list
+
+                    data.forEach(student => {
+                        // Create checkbox for each student
+                        var checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'attendance'; // Set same name for all checkboxes
+                        checkbox.value = student.student_id; // Use student ID as value
+                        checkbox.id = 'student_' + student.id; // Unique ID for each checkbox
+
+                        // Create label for the checkbox with student name
+                        var label = document.createElement('label');
+                        label.htmlFor = 'student_' + student.id;
+                        label.appendChild(document.createTextNode(student.name));
+
+                        // Create div for each student item
+                        var studentItemDiv = document.createElement('div');
+                        studentItemDiv.className = 'student-item';
+                        studentItemDiv.appendChild(checkbox);
+                        studentItemDiv.appendChild(label);
+
+                        // Append student item to the student list
+                        studentListDiv.appendChild(studentItemDiv);
+                    });
+
+                    // Set class ID in the hidden input field
+                    document.getElementById('class-id-hidden').value = classId;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('attendance-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get selected students marked as absent
+            var absentStudents = [];
+            var checkboxes = document.querySelectorAll('input[name="attendance"]:checked');
+            checkboxes.forEach(checkbox => {
+                absentStudents.push(checkbox.value);
+            });
+
+            var classId = document.getElementById('class-id-hidden').value;
+
+            var formData = new FormData();
+            formData.append('class-id', classId);
+            formData.append('absent-students', JSON.stringify(absentStudents));
+
+            var csrftoken = getCookie('csrftoken');
+            fetch('/api/student-attendance/', {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                credentials: "include",
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to submit attendance data');
+            })
+            .then(data =>{
+                console.log(data);
+                alert('Attendance marked successfully');
+            })
+            .catch(error =>{
+                console.error('Error:', error);
+                alert('Failed to mark attendance');
+            });
+        });
+    </script>
+</body>
+</html>

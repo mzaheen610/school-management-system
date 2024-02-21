@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #profile-form,
+        #student-info {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            text-align: left
+        }
+        
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-container button {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="profile-form">
+        <h2>Student Profile</h2>
+        <label for="student-id">Enter Student ID:</label>
+        <input type="text" id="student-id" required>
+        <button type="button" onclick="fetchStudentInfo()">Fetch Info</button>
+    </form>
+
+    <div id="student-info"></div>
+
+    <div class="btn-container">
+        <button onclick="editProfile()">Edit Profile</button>
+        <button onclick="deleteProfile('${studentId}')">Delete Profile</button>
+    </div>
+
+    <script>
+        function getCSRFToken() {
+            const csrfCookie = document.cookie
+                .split(';')
+                .find(cookie => cookie.trim().startsWith('csrftoken='));
+
+            return csrfCookie ? csrfCookie.split('=')[1] : null;
+        }
+
+        function fetchStudentInfo() {
+            const studentId = document.getElementById('student-id').value;
+            const infoContainer = document.getElementById('student-info');
+
+            // Make a request to the API endpoint
+            fetch(`/api/student/${studentId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display the fetched student info
+                    infoContainer.innerHTML = `
+                        <h2>Student Information</h2>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Date of Birth:</strong> ${data.date_of_birth}</p>
+                        <p><strong>Current Class:</strong> ${data.current_class}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                    `;
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error fetching student info:', error);
+                    infoContainer.innerHTML = `<p>Error fetching student info.</p>`;
+                });
+        }
+
+        function editProfile() {
+            // Implement edit profile functionality as needed
+            console.log('Edit Profile clicked');
+        }
+
+        function deleteProfile(studentId) {
+            // Make a DELETE request to the API endpoint
+            fetch(`/api/student/${studentId}/`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle successful deletion
+                    console.log('Profile deleted successfully:', data);
+                    // You may want to update the UI or provide feedback to the user
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error deleting profile:', error);
+                    // You may want to update the UI or provide feedback to the user
+                });
+        }
+    </script>
+</body>
+</html>
