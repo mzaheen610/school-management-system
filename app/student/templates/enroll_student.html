@@ -78,7 +78,7 @@
 </head>
 <body>
 
-  <form method="post" action="{% url 'student:student-list' %}">
+  <form id= "enrollmentForm" method="post" action="{% url 'student:student-list' %}">
     {% csrf_token %}
 
     {{ form.non_field_errors }}
@@ -109,6 +109,36 @@
 
     <button type="submit">Enroll</button>
   </form>
+
+  <script>
+  // JS to prevent default form submission behavior
+
+  document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    fetch('{% url 'student:student-list' %}' , {
+      method: 'POST',
+      body: new FormData(this),
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data)
+      alert("Student enrollment success.");
+    })
+    .catch(error => {
+      console.error('Error submitting form:', error);
+      alert('Error submitting form.')
+    });
+  });
+  </script>
 
 </body>
 </html>

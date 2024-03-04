@@ -37,7 +37,7 @@
         p {
             text-align: left
         }
-        
+
         label {
             display: block;
             margin-top: 10px;
@@ -88,11 +88,11 @@
         <button type="button" onclick="fetchStudentInfo()">Fetch Info</button>
     </form>
 
-    <div id="student-info"></div>
+    <div id="student-info" style="display: none;"></div>
 
-    <div class="btn-container">
+    <div class="btn-container" style="display: none;">
         <button onclick="editProfile()">Edit Profile</button>
-        <button onclick="deleteProfile('${studentId}')">Delete Profile</button>
+        <button onclick="deleteProfile()">Delete Profile</button>
     </div>
 
     <script>
@@ -131,6 +131,8 @@
                     console.error('Error fetching student info:', error);
                     infoContainer.innerHTML = `<p>Error fetching student info.</p>`;
                 });
+            document.getElementById("student-info").style.display = "block";
+            document.getElementsByClassName("btn-container")[0].style.display = "block";
         }
 
         function editProfile() {
@@ -138,26 +140,37 @@
             console.log('Edit Profile clicked');
         }
 
-        function deleteProfile(studentId) {
+        function deleteProfile() {
             // Make a DELETE request to the API endpoint
-            fetch(`/api/student/${studentId}/`, { method: 'DELETE' })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Handle successful deletion
+            const studentId = document.getElementById('student-id').value;
+            const csrf_token = getCSRFToken()
+
+            fetch(`/api/student/${studentId}/`,{
+                method: 'DELETE',
+                headers: {'X-CSRFToken': csrf_token },
+                credentials: "include"
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                if (response.status === 204){
+                    console.log('Profile deleted successfully');
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data){
                     console.log('Profile deleted successfully:', data);
-                    // You may want to update the UI or provide feedback to the user
-                })
-                .catch(error => {
-                    // Handle errors
-                    console.error('Error deleting profile:', error);
-                    // You may want to update the UI or provide feedback to the user
-                });
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error deleting profile:', error);
+            });
         }
     </script>
 </body>
 </html>
+

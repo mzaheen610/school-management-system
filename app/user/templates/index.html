@@ -116,6 +116,12 @@
                         <p>Mark attendance for students and staff.</p>
                     </div>
                 </button>
+                <button class="feature" onclick="window.location.href='{% url 'message' %}'">
+                    <div>
+                        <h3>Communications</h3>
+                        <p>Notifications and messaging system for the users.</p>
+                    </div>
+                </button>
             </div>
 
             {% elif request.user.is_school_staff %}
