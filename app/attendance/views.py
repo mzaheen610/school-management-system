@@ -33,7 +33,11 @@ class StudentAttendanceView(viewsets.GenericViewSet,
         student_id = request.query_params.get('student_id')
         attendance_date = request.query_params.get('attendance_date')
 
-        if student_id:
+        if student_id and attendance_date:
+            queryset = self.get_queryset().filter(student=student_id, date=attendance_date)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        elif student_id:
             queryset = self.get_queryset().filter(student=student_id)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
@@ -41,10 +45,7 @@ class StudentAttendanceView(viewsets.GenericViewSet,
             queryset = self.get_queryset().filter(date=attendance_date)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
-        elif student_id and attendance_date:
-            queryset = self.get_queryset().filter(student=student_id, date=attendance_date)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+
 
         return super().list(request, *args, **kwargs)
 

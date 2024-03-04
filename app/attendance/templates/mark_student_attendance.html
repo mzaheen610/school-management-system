@@ -101,7 +101,7 @@
     </div>
 
     <!-- Form to submit attendance data -->
-    <form id="attendance-form">
+    <form id="attendance-form" style="display: none;">
         {% csrf_token %}
         <input type="hidden" id="class-id-hidden" name="class-id">
         <input type="hidden" id="absent-students-hidden" name="absent-students">
@@ -166,6 +166,7 @@
 
                     // Set class ID in the hidden input field
                     document.getElementById('class-id-hidden').value = classId;
+                    document.getElementById('attendance-form').style.display = "block";
                 })
                 .catch(error => {
                     console.error('Error:', error);

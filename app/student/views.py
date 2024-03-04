@@ -74,3 +74,7 @@ def StudentEnrollmentPageView(request):
 def StudentProfileView(request):
     """View for the student profile page."""
     return render(request, 'student_profile.html')
+
+def StudentEditPageView(request):
+    """View for editing student profile."""
+    return render(request, 'edit_profile.html')
