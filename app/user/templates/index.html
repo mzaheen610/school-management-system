@@ -121,6 +121,12 @@
                         <p>Notifications and messaging system for the users.</p>
                     </div>
                 </button>
+                <button class="feature" onclick="window.location.href='{% url 'sample-dashboard' %}'">
+                    <div>
+                        <h3>Attendance Dashboard</h3>
+                        <p>View attendance performance of each student.</p>
+                    </div>
+                </button>
             </div>
 
             {% elif request.user.is_school_staff %}
