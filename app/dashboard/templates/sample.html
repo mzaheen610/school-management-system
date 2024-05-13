@@ -46,6 +46,8 @@
 
             var studentID = document.getElementById("student-id").value;
             console.log(studentID)
+            var studentData;
+
             fetch('/dashboard/api/attendance/', {
                 method: 'POST',
                 headers: {
@@ -62,8 +64,10 @@
             })
             .then(data =>{
                 console.log(data);
+                studentData = data;
                 const ctx = document.getElementById('myChart');
-                new Chart(ctx, {
+
+                const myChart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: data["dates"],
@@ -89,12 +93,14 @@
                 newDiv.appendChild(newParagraph)
                 newDiv.appendChild(nextParagraph)
                 document.body.appendChild(newDiv)
+
             })
             .catch(error =>{
                 console.error('Error:', error);
                 alert('Failed to create dashboard');
             });
 
+        // console.log(studentData);
 
         })
 

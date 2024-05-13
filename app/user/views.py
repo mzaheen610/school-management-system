@@ -45,7 +45,5 @@ def login_view(request):
 
 def logout_view(request):
     """View to handle logout"""
-
     logout(request)
-
     return redirect('home')
