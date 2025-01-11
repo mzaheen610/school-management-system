@@ -13,4 +13,3 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ['student_id', 'name', 'date_of_birth', 'join_date', 'current_class', 'email']
         read_only_fields = ['student_id']
 
-

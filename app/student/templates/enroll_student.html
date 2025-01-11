@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrollment</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Additional styling for better alignment */
+        form > div {
+            margin-bottom: 15px;
+        }
+
+        form > div:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <h2>Student Enrollment Form</h2>
+
+</head>
+<body>
+
+  <form id= "enrollmentForm" method="post" action="{% url 'student:student-list' %}">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div>
+      <label for="{{ form.name.id_for_label }}">Name:</label>
+      {{ form.name }}
+      {{ form.name.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth:</label>
+      {{ form.date_of_birth }}
+      {{ form.date_of_birth.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.current_class.id_for_label }}">Current Class:</label>
+      {{ form.current_class }}
+      {{ form.current_class.errors }}
+    </div>
+
+    <div>
+      <label for="{{ form.email.id_for_label }}">Email:</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <button type="submit">Enroll</button>
+  </form>
+
+  <script>
+  // JS to prevent default form submission behavior
+
+  document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    fetch('{% url 'student:student-list' %}' , {
+      method: 'POST',
+      body: new FormData(this),
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data)
+      alert("Student enrollment success.");
+    })
+    .catch(error => {
+      console.error('Error submitting form:', error);
+      alert('Error submitting form.')
+    });
+  });
+  </script>
+
+</body>
+</html>

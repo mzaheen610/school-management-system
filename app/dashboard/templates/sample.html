@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="student-id-form">
+        <div>
+            <label>Enter student ID:</label>
+            <input type="text" id="student-id" name="student-id">
+            <button type="submit">View Performance</button>
+        </div>
+    </form>
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if the cookie contains the specified name
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        // Extract and return the cookie value
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+        var studentName;
+        var absentCount;
+
+        document.getElementById('student-id-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var studentID = document.getElementById("student-id").value;
+            console.log(studentID)
+            var studentData;
+
+            fetch('/dashboard/api/attendance/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"student_id": studentID})
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to submit attendance data');
+            })
+            .then(data =>{
+                console.log(data);
+                studentData = data;
+                const ctx = document.getElementById('myChart');
+
+                const myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data["dates"],
+                        datasets: [{
+                            label: 'Attendance',
+                            data: data["data"],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                var newDiv = document.createElement("div");
+                var newParagraph = document.createElement("p")
+                newParagraph.textContent = "Student:" + data["student"]
+                var nextParagraph = document.createElement("p")
+                nextParagraph.textContent = "Days Absent:" + data["absent_count"]
+                newDiv.appendChild(newParagraph)
+                newDiv.appendChild(nextParagraph)
+                document.body.appendChild(newDiv)
+
+            })
+            .catch(error =>{
+                console.error('Error:', error);
+                alert('Failed to create dashboard');
+            });
+
+        // console.log(studentData);
+
+        })
+
+      </script>
+</body>
+</html>

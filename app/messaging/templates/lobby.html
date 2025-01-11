@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Home Page</title>
+    <style>
+        #message-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        margin: auto;
+        margin-top: 20px;
+        text-align: left;
+        }
+
+        #form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        margin: auto;
+        margin-top: 20px;
+        text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>
+        Communication system for admins, staff, parents and students.
+    </h1>
+
+    <div id="message-container"></div>
+
+    <form id="form">
+        <input type="text" name="message">
+        <button type="submit">Send</button>
+    </form>
+
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+            displayMessage(data)
+        }
+
+        let form = document.getElementById('form')
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'message' :message
+            }))
+            form.reset()
+            
+        })
+
+        function displayMessage(message){
+            let messageContainer = document.getElementById('message-container')
+            let messageElement = document.createElement('div')
+            messageElement.textContent = message.message
+            messageContainer.appendChild(messageElement)
+        }
+    </script>
+
+</body>
+</html>

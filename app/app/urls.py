@@ -25,5 +25,9 @@ urlpatterns = [
          name='api-docs',
          ),
     path('', include('user.urls')),
-    path('api/', include('student.urls')),
+    path('classroom/', include("classrooms.urls")),
+    path('', include('student.urls')),
+    path('', include('attendance.urls')),
+    path('messaging/', include('messaging.urls')),
+    path('dashboard/', include('dashboard.urls') ),
 ]

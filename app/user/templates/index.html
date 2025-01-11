@@ -11,14 +11,15 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #343a40; /* Dark background color */
-            color: #fff; /* White text color */
+            background-color: #f8f9fa; /* Light background color */
+            color: #495057; /* Dark text color */
         }
 
         header {
-            background-color: #212529; /* Darker background color */
+            background-color: #343a40; /* Darker background color */
             padding: 20px;
             text-align: center;
+            color: #fff; /* White text color */
         }
 
         h1 {
@@ -32,7 +33,7 @@
 
         p {
             font-size: 18px;
-            color: #ccc; /* Light gray text color */
+            color: #6c757d; /* Gray text color */
             margin-bottom: 10px;
         }
 
@@ -57,15 +58,20 @@
         .feature {
             width: calc(33.33% - 20px);
             padding: 20px;
-            background-color: #212529; /* Darker background color */
+            background-color: #fff; /* White background color */
             margin: 10px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
         }
 
         .feature:hover {
             transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature h3 {
+            color: #343a40; /* Dark text color */
         }
 
         footer {
@@ -73,9 +79,6 @@
             color: #fff; /* White text color */
             text-align: center;
             padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
     </style>
 </head>
@@ -94,14 +97,36 @@
             <a class="cta-button" href="{% url 'admin:index' %}">Admin Page</a>
             <!-- Display features for the admins -->
             <div class="features">
-                <div class="feature">
-                    <h3>Student Enrollment</h3>
-                    <p>Enroll new students into the system.</p>
-                </div>
-                <div class="feature">
-                    <h3>Attendance Management</h3>
-                    <p>Mark attendance for students and staff.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_enrollment_page' %}'">
+                    <div>
+                        <h3>Student Enrollment</h3>
+                        <p>Enroll new students into the system.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_profile' %}'">
+                    <div>
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'attendance:mark-attendance' %}'">
+                    <div>
+                        <h3>Attendance Management</h3>
+                        <p>Mark attendance for students and staff.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'message' %}'">
+                    <div>
+                        <h3>Communications</h3>
+                        <p>Notifications and messaging system for the users.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'sample-dashboard' %}'">
+                    <div>
+                        <h3>Attendance Dashboard</h3>
+                        <p>View attendance performance of each student.</p>
+                    </div>
+                </button>
             </div>
 
             {% elif request.user.is_school_staff %}
@@ -133,18 +158,24 @@
             <a class="cta-button" href="{% url 'login_form' %}">Login</a>
             <!-- Features for non-authenticated users -->
             <div class="features">
-                <div class="feature">
-                    <h3>View Student Information</h3>
-                    <p>Access information about your child's performance and attendance.</p>
-                </div>
-                <div class="feature">
-                    <h3>Student Enrollment</h3>
-                    <p>Enroll new students into the system.</p>
-                </div>
-                <div class="feature">
-                    <h3>Attendance Management</h3>
-                    <p>Mark attendance for students and staff.</p>
-                </div>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_profile' %}'">
+                    <div>
+                        <h3>View Student Information</h3>
+                        <p>Access information about your child's performance and attendance.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'student:student_enrollment_page' %}'">
+                    <div>
+                        <h3>Student Enrollment</h3>
+                        <p>Enroll new students into the system.</p>
+                    </div>
+                </button>
+                <button class="feature" onclick="window.location.href='{% url 'attendance:mark-attendance' %}'">
+                    <div class="feature">
+                        <h3>Attendance Management</h3>
+                        <p>Mark attendance for students and staff.</p>
+                    </div>
+                </button>
                 <div class="feature">
                     <h3>Student and Staff Management</h3>
                     <p>Manage information about students and staff.</p>
@@ -161,7 +192,3 @@
         <p>&copy; 2024 School Management System</p>
     </footer>
 
-    <!-- Bootstrap JS (Optional, for certain Bootstrap components) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
