@@ -22,22 +22,22 @@ A user-friendly digital solution that helps schools track and manage student att
   - Save time on attendance taking
   - Quick access to student attendance history
   - Less paperwork
-
+<img width="1440" alt="Screenshot 2025-02-25 at 1 31 21 PM" src="https://github.com/user-attachments/assets/1290f2ee-db37-4cce-9ec0-33b6551ea482" />
 - **For Administrators**:
   - Monitor attendance trends
   - Generate attendance reports easily
   - Make data-driven decisions
+<img width="1440" alt="Screenshot 2025-02-25 at 1 35 30 PM" src="https://github.com/user-attachments/assets/face2d6b-140b-409e-963e-6e1a0a7d6055" />
 
 - **For Parents/Students**:
   - Check attendance records anytime
   - Track absence patterns
   - Stay informed about attendance status
 
+<img width="1440" alt="Screenshot 2025-02-25 at 1 30 06 PM" src="https://github.com/user-attachments/assets/489b7db6-3543-47c0-82d0-07775bf64878" />
+
 Built with modern web technologies to ensure reliability and ease of use.
 
 
 
-<img width="1440" alt="Screenshot 2025-02-25 at 1 31 21 PM" src="https://github.com/user-attachments/assets/1290f2ee-db37-4cce-9ec0-33b6551<img width="1440" alt="Screenshot 2025-02-25 at 1 35 30 PM" src="https://github.com/user-attachments/assets/face2d6b-140b-409e-963e-6e1a0a7d6055" />
-ea482" />
 
-<img width="1440" alt="Screenshot 2025-02-25 at 1 30 06 PM" src="https://github.com/user-attachments/assets/489b7db6-3543-47c0-82d0-07775bf64878" />
